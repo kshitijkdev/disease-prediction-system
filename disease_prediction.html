@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Disease Prediction System — K J Somaiya School of Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --navy-mid: #132944;
+    --teal: #0C8B7E;
+    --teal-light: #14B0A0;
+    --sky: #E0F4F2;
+    --bg: #F2F6FA;
+    --white: #FFFFFF;
+    --text: #0F1F35;
+    --muted: #5A7090;
+    --border: #D0DDE8;
+    --green: #1AAF5D;
+    --orange: #F08C00;
+    --red: #D93025;
+    --green-bg: #E6FAF0;
+    --orange-bg: #FFF4E0;
+    --red-bg: #FDECEA;
+    --shadow: 0 4px 24px rgba(11,31,58,0.10);
+    --shadow-card: 0 2px 12px rgba(11,31,58,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: var(--teal);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+  .header-text p {
+    font-size: 0.72rem;
+    color: #8AACCA;
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge-header {
+    margin-left: auto;
+    background: rgba(12,139,126,0.22);
+    color: #5FE3D4;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(95,227,212,0.25);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── HERO BAND ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy-mid) 0%, #164B6E 100%);
+    color: #fff;
+    text-align: center;
+    padding: 56px 24px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 120%, rgba(12,139,126,0.28) 0%, transparent 70%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h2 em { color: var(--teal-light); font-style: italic; }
+  .hero p {
+    font-size: 1rem;
+    color: #A8C5DD;
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .disclaimer-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    color: #8AACCA;
+  }
+  .disclaimer-pill span { font-size: 14px; }
+
+  /* ── MAIN LAYOUT ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── STEP INDICATOR ── */
+  .steps {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 36px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .step {
+    flex: 1; display: flex; align-items: center; gap: 10px;
+    padding: 16px 20px;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--muted);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .step.active { background: var(--sky); color: var(--teal); }
+  .step.done { color: var(--green); }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--muted);
+    font-size: 0.78rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.3s;
+  }
+  .step.active .step-num { background: var(--teal); color: #fff; }
+  .step.done .step-num { background: var(--green); color: #fff; }
+  .step-divider { width: 1px; height: 40px; background: var(--border); flex-shrink: 0; }
+
+  /* ── SYMPTOM SECTION ── */
+  #symptom-section { animation: fadeUp 0.5s ease both; }
+  #results-section { display: none; animation: fadeUp 0.5s ease both; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.55rem; font-weight: 400;
+    color: var(--navy);
+  }
+
+  /* ── COUNTER + SEARCH ── */
+  .toolbar {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .search-wrap {
+    flex: 1; min-width: 200px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 14px 10px 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    background: var(--white);
+    outline: none;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--teal); }
+  .search-wrap svg {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    color: var(--muted);
+  }
+  .counter-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.88rem; font-weight: 500;
+    white-space: nowrap;
+  }
+  .counter-pill #count-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem; font-weight: 500;
+    color: var(--teal-light);
+    min-width: 22px; text-align: center;
+  }
+
+  /* ── CATEGORY GROUPS ── */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .cat-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .cat-card:hover { border-color: #9EC8D8; box-shadow: var(--shadow); }
+  .cat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .cat-name {
+    font-weight: 600; font-size: 0.88rem;
+    color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .cat-count {
+    margin-left: auto;
+    font-size: 0.74rem; font-weight: 600;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .symptoms-list { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .symptom-item { display: none; }
+  .symptom-item.visible { display: flex; }
+  .symptom-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background 0.15s;
+    width: 100%;
+    user-select: none;
+  }
+  .symptom-label:hover { background: var(--sky); }
+  .symptom-label input[type="checkbox"] { display: none; }
+  .check-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+    background: #fff;
+  }
+  .check-box svg { opacity: 0; transition: opacity 0.15s; }
+  .symptom-label input:checked + .check-box {
+    background: var(--teal); border-color: var(--teal);
+  }
+  .symptom-label input:checked + .check-box svg { opacity: 1; }
+  .symptom-text { font-size: 0.88rem; color: var(--text); }
+  .symptom-label input:checked ~ .symptom-text { color: var(--teal); font-weight: 500; }
+
+  /* ── ERROR ── */
+  #error-msg {
+    display: none;
+    background: var(--red-bg);
+    border: 1px solid #F5B9B5;
+    color: var(--red);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 0.88rem; font-weight: 500;
+    margin-bottom: 16px;
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  /* ── SUBMIT BTN ── */
+  .submit-area { text-align: center; margin-top: 8px; }
+  .btn-predict {
+    background: linear-gradient(135deg, var(--teal) 0%, #07706A 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 16px 52px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(12,139,126,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative; overflow: hidden;
+  }
+  .btn-predict:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(12,139,126,0.45); }
+  .btn-predict:active { transform: translateY(0); }
+  .btn-predict .btn-icon { margin-right: 8px; }
+
+  /* ── RESULTS ── */
+  .results-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .results-back {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--navy);
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .results-back:hover { border-color: var(--teal); color: var(--teal); }
+  .results-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.55rem; font-weight: 400; color: var(--navy);
+  }
+  .results-subtitle {
+    font-size: 0.88rem; color: var(--muted); margin-left: auto;
+  }
+
+  /* ── RESULT CARDS ── */
+  .results-list { display: flex; flex-direction: column; gap: 16px; }
+  .result-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    animation: fadeUp 0.4s ease both;
+  }
+  .result-card:nth-child(2) { animation-delay: 0.06s; }
+  .result-card:nth-child(3) { animation-delay: 0.12s; }
+  .result-card:nth-child(4) { animation-delay: 0.18s; }
+  .result-card:nth-child(5) { animation-delay: 0.24s; }
+  .result-top {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px 16px;
+    flex-wrap: wrap;
+  }
+  .result-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 4px 10px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .result-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem; font-weight: 400;
+    color: var(--navy);
+    flex: 1;
+  }
+  .severity-badge {
+    font-size: 0.74rem; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .sev-low  { background: var(--green-bg);  color: var(--green); }
+  .sev-med  { background: var(--orange-bg); color: var(--orange); }
+  .sev-high { background: var(--red-bg);    color: var(--red); }
+  .match-bar-wrap {
+    padding: 0 24px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .match-bar-bg {
+    flex: 1; height: 8px;
+    background: var(--bg);
+    border-radius: 10px; overflow: hidden;
+  }
+  .match-bar-fill {
+    height: 100%; border-radius: 10px;
+    background: linear-gradient(90deg, var(--teal) 0%, var(--teal-light) 100%);
+    transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .match-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--teal); min-width: 42px;
+  }
+  .result-body { padding: 0 24px 20px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .result-col { flex: 1; min-width: 220px; }
+  .result-col-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .result-col p { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+  .result-rec {
+    background: var(--sky);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: #0D5C55;
+    line-height: 1.55;
+  }
+  .result-rec strong { display: block; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; color: var(--teal); }
+
+  /* ── NO MATCH ── */
+  .no-match {
+    text-align: center;
+    padding: 60px 24px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+  }
+  .no-match .icon { font-size: 48px; margin-bottom: 16px; }
+  .no-match h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; color: var(--navy); margin-bottom: 8px; }
+  .no-match p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: #8AACCA;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .categories-grid { grid-template-columns: 1fr; }
+    .step .step-label { display: none; }
+    .results-subtitle { display: none; }
+    .result-body { flex-direction: column; }
+    .badge-header { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-icon">🩺</div>
+    <div class="header-text">
+      <h1>Disease Prediction System</h1>
+      <p>K J Somaiya School of Engineering &nbsp;·&nbsp; Dept. of Computer Engineering</p>
+    </div>
+    <div class="badge-header">Academic Project 2025–26</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h2>Identify Possible Conditions from <em>Your Symptoms</em></h2>
+    <p>Select the symptoms you're experiencing. Our rule-based engine will match them against a curated database of 20 common conditions and return ranked predictions.</p>
+    <div class="disclaimer-pill"><span>⚠️</span> For informational use only — not a substitute for professional medical advice.</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- STEP INDICATOR -->
+  <div class="steps">
+    <div class="step active" id="step1">
+      <div class="step-num" id="s1n">1</div>
+      <span class="step-label">Select Symptoms</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step2">
+      <div class="step-num" id="s2n">2</div>
+      <span class="step-label">Run Prediction</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step3">
+      <div class="step-num" id="s3n">3</div>
+      <span class="step-label">View Results</span>
+    </div>
+  </div>
+
+  <!-- ===== SYMPTOM SECTION ===== -->
+  <section id="symptom-section">
+    <div class="section-header">
+      <h2 class="section-title">Choose Your Symptoms</h2>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search symptoms…" oninput="filterSymptoms(this.value)"/>
+      </div>
+      <div class="counter-pill">
+        <span>Selected:</span>
+        <span id="count-num">0</span>
+        <span>symptoms</span>
+      </div>
+      <button onclick="clearAll()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:0.86rem;color:var(--muted);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Clear all</button>
+    </div>
+
+    <div id="error-msg">⚠️ Please select at least one symptom before predicting.</div>
+
+    <div class="categories-grid" id="cats-grid"></div>
+
+    <div class="submit-area">
+      <button class="btn-predict" onclick="runPrediction()">
+        <span class="btn-icon">🔍</span> Predict Disease
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS SECTION ===== -->
+  <section id="results-section">
+    <div class="results-header">
+      <button class="results-back" onclick="goBack()">← Try Again</button>
+      <h2 class="results-title">Prediction Results</h2>
+      <span class="results-subtitle" id="results-subtitle"></span>
+    </div>
+    <div id="results-list" class="results-list"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Disease Prediction System — K J Somaiya School of Engineering, Somaiya Vidyavihar University, Mumbai – 400 077</div>
+  <div>Kshitij Kumar (16010124159) &nbsp;·&nbsp; Aryan Mahimkar (16010124165) &nbsp;·&nbsp; Usman Kazi (16010124148) &nbsp;·&nbsp; AY 2025–26</div>
+  <div style="margin-top:6px;font-size:0.72rem;color:#4A6080;">⚠️ This tool is for educational and informational purposes only. Always consult a qualified medical professional.</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+const SYMPTOMS = [
+  // General
+  { id:1,  name:'Fever',                 cat:'General' },
+  { id:2,  name:'High Fever',            cat:'General' },
+  { id:3,  name:'Cyclic Fever',          cat:'General' },
+  { id:4,  name:'Prolonged Fever',       cat:'General' },
+  { id:5,  name:'Fatigue',               cat:'General' },
+  { id:6,  name:'Weakness',              cat:'General' },
+  { id:7,  name:'Loss of Appetite',      cat:'General' },
+  { id:8,  name:'Weight Loss',           cat:'General' },
+  { id:9,  name:'Night Sweats',          cat:'General' },
+  { id:10, name:'Chills',               cat:'General' },
+  { id:11, name:'Sweating',             cat:'General' },
+  // Neurological
+  { id:12, name:'Headache',             cat:'Neurological' },
+  { id:13, name:'Severe Headache',      cat:'Neurological' },
+  { id:14, name:'Migraine Aura',        cat:'Neurological' },
+  { id:15, name:'Dizziness',            cat:'Neurological' },
+  { id:16, name:'Blurred Vision',       cat:'Neurological' },
+  { id:17, name:'Confusion',            cat:'Neurological' },
+  // Respiratory
+  { id:18, name:'Cough',               cat:'Respiratory' },
+  { id:19, name:'Dry Cough',           cat:'Respiratory' },
+  { id:20, name:'Productive Cough',    cat:'Respiratory' },
+  { id:21, name:'Shortness of Breath', cat:'Respiratory' },
+  { id:22, name:'Wheezing',            cat:'Respiratory' },
+  { id:23, name:'Sore Throat',         cat:'Respiratory' },
+  { id:24, name:'Runny Nose',          cat:'Respiratory' },
+  { id:25, name:'Nasal Congestion',    cat:'Respiratory' },
+  { id:26, name:'Sneezing',            cat:'Respiratory' },
+  { id:27, name:'Chest Pain',          cat:'Respiratory' },
+  // Gastrointestinal
+  { id:28, name:'Nausea',              cat:'Gastrointestinal' },
+  { id:29, name:'Vomiting',            cat:'Gastrointestinal' },
+  { id:30, name:'Diarrhoea',           cat:'Gastrointestinal' },
+  { id:31, name:'Abdominal Pain',      cat:'Gastrointestinal' },
+  { id:32, name:'Bloating',            cat:'Gastrointestinal' },
+  { id:33, name:'Constipation',        cat:'Gastrointestinal' },
+  { id:34, name:'Indigestion',         cat:'Gastrointestinal' },
+  { id:35, name:'Loss of Taste/Smell', cat:'Gastrointestinal' },
+  // Musculoskeletal
+  { id:36, name:'Muscle Pain',         cat:'Musculoskeletal' },
+  { id:37, name:'Joint Pain',          cat:'Musculoskeletal' },
+  { id:38, name:'Joint Swelling',      cat:'Musculoskeletal' },
+  { id:39, name:'Back Pain',           cat:'Musculoskeletal' },
+  { id:40, name:'Stiffness',           cat:'Musculoskeletal' },
+  { id:41, name:'Body Ache',           cat:'Musculoskeletal' },
+  // Skin & Eyes
+  { id:42, name:'Skin Rash',           cat:'Skin & Eyes' },
+  { id:43, name:'Itching',             cat:'Skin & Eyes' },
+  { id:44, name:'Yellowing of Skin',   cat:'Skin & Eyes' },
+  { id:45, name:'Pale Skin',           cat:'Skin & Eyes' },
+  { id:46, name:'Blisters/Spots',      cat:'Skin & Eyes' },
+  { id:47, name:'Red Eyes',            cat:'Skin & Eyes' },
+  { id:48, name:'Eye Discharge',       cat:'Skin & Eyes' },
+  { id:49, name:'Pain Behind Eyes',    cat:'Skin & Eyes' },
+  // Urinary / Other
+  { id:50, name:'Frequent Urination',  cat:'Urinary & Other' },
+  { id:51, name:'Burning Urination',   cat:'Urinary & Other' },
+  { id:52, name:'Excessive Thirst',    cat:'Urinary & Other' },
+  { id:53, name:'Slow Healing Wounds', cat:'Urinary & Other' },
+  { id:54, name:'High Blood Pressure', cat:'Urinary & Other' },
+  { id:55, name:'Palpitations',        cat:'Urinary & Other' },
+  { id:56, name:'Night Blindness',     cat:'Urinary & Other' },
+];
+
+const DISEASES = [
+  {
+    id:1, name:'Common Cold', severity:'Low',
+    symptoms:[18,23,24,25,26,1,12],
+    desc:'A viral infection of the upper respiratory tract. Usually mild and self-limiting.',
+    rec:'Rest, stay hydrated, and use OTC cold medicine. Consult a doctor if symptoms persist beyond 10 days.'
+  },
+  {
+    id:2, name:'Influenza (Flu)', severity:'Medium',
+    symptoms:[1,2,5,12,36,41,18,19,23,28],
+    desc:'A contagious respiratory illness caused by influenza viruses. More severe than the common cold.',
+    rec:'Rest, fluids, antiviral medication if detected early. Seek care if breathing difficulty occurs.'
+  },
+  {
+    id:3, name:'Dengue Fever', severity:'High',
+    symptoms:[2,13,49,37,42,28,5,41],
+    desc:'A mosquito-borne viral infection common in tropical regions, causing high fever and severe pain.',
+    rec:'Seek immediate medical attention. Hospitalisation may be required for severe dengue.'
+  },
+  {
+    id:4, name:'Malaria', severity:'High',
+    symptoms:[3,10,11,12,36,5,29,2],
+    desc:'A parasitic disease transmitted by Anopheles mosquitoes. Characterised by cyclic fever.',
+    rec:'Consult a doctor immediately for blood smear test and antimalaria medication.'
+  },
+  {
+    id:5, name:'Typhoid', severity:'High',
+    symptoms:[4,6,31,12,7,42,29,5],
+    desc:'A bacterial infection causing prolonged fever, gastrointestinal symptoms, and weakness.',
+    rec:'Requires antibiotics prescribed by a doctor. Maintain strict food and water hygiene.'
+  },
+  {
+    id:6, name:'Tuberculosis (TB)', severity:'High',
+    symptoms:[20,8,9,5,27,6,1,19],
+    desc:'A serious bacterial infection primarily affecting the lungs. Spreads through airborne droplets.',
+    rec:'Consult a pulmonologist immediately. TB is curable with a 6-month antibiotic course.'
+  },
+  {
+    id:7, name:'Diabetes Mellitus (Type 2)', severity:'Medium',
+    symptoms:[50,52,5,16,53,8,15],
+    desc:'A metabolic disorder where the body cannot properly regulate blood sugar levels.',
+    rec:'Consult an endocrinologist. Lifestyle changes and medication can effectively manage the condition.'
+  },
+  {
+    id:8, name:'Hypertension', severity:'Medium',
+    symptoms:[54,12,55,15,27,17],
+    desc:'Persistently elevated blood pressure that can damage arteries and organs over time.',
+    rec:'Monitor blood pressure regularly. Consult a cardiologist for diagnosis and management plan.'
+  },
+  {
+    id:9, name:'Migraine', severity:'Low',
+    symptoms:[13,14,28,16,15,5,12],
+    desc:'A neurological condition causing severe recurring headaches, often with nausea and light sensitivity.',
+    rec:'Avoid known triggers. Consult a neurologist if migraines are frequent or debilitating.'
+  },
+  {
+    id:10, name:'Gastroenteritis', severity:'Medium',
+    symptoms:[29,30,31,28,1,5,32],
+    desc:'Inflammation of the stomach and intestines, commonly called stomach flu.',
+    rec:'Oral rehydration therapy is key. See a doctor if vomiting persists or signs of dehydration appear.'
+  },
+  {
+    id:11, name:'COVID-19 (Mild)', severity:'Medium',
+    symptoms:[1,19,5,35,27,21,12,28,41],
+    desc:'A respiratory illness caused by SARS-CoV-2, ranging from mild to severe. Loss of smell/taste is characteristic.',
+    rec:'Isolate immediately, rest and hydrate. Seek emergency care if oxygen levels drop.'
+  },
+  {
+    id:12, name:'Chickenpox', severity:'Low',
+    symptoms:[46,43,1,5,12,42],
+    desc:'A highly contagious viral disease causing an itchy blister rash, common in children.',
+    rec:'Isolate the patient. Use calamine lotion for itching. Antivirals for severe cases.'
+  },
+  {
+    id:13, name:'Pneumonia', severity:'High',
+    symptoms:[20,27,1,2,21,5,6,28,10],
+    desc:'Infection inflaming air sacs in one or both lungs, which may fill with fluid.',
+    rec:'Seek immediate medical attention. Antibiotics or antivirals depending on the cause.'
+  },
+  {
+    id:14, name:'Jaundice', severity:'High',
+    symptoms:[44,5,7,28,29,31,6],
+    desc:'Yellowing of skin and eyes due to elevated bilirubin, often indicating liver or bile duct problems.',
+    rec:'Consult a gastroenterologist urgently. Avoid fatty foods and alcohol.'
+  },
+  {
+    id:15, name:'Asthma', severity:'Medium',
+    symptoms:[22,21,27,18,19,5],
+    desc:'A chronic respiratory condition causing airway inflammation and narrowing, leading to wheezing.',
+    rec:'Use prescribed inhalers. Identify and avoid triggers. Regular follow-up with a pulmonologist.'
+  },
+  {
+    id:16, name:'Anaemia', severity:'Low',
+    symptoms:[45,5,6,15,27,55,12,56],
+    desc:'A condition where the blood lacks enough healthy red blood cells or haemoglobin.',
+    rec:'Increase iron-rich foods. Consult a doctor for blood tests and supplementation if needed.'
+  },
+  {
+    id:17, name:'Food Poisoning', severity:'Medium',
+    symptoms:[29,30,31,28,1,32,34],
+    desc:'Illness from eating contaminated food. Symptoms usually begin hours after consumption.',
+    rec:'Stay hydrated with ORS. Seek care if vomiting blood, severe pain, or high fever is present.'
+  },
+  {
+    id:18, name:'Arthritis', severity:'Low',
+    symptoms:[37,38,40,39,5,6],
+    desc:'Inflammation of one or more joints, causing pain and stiffness that worsens with age.',
+    rec:'Consult a rheumatologist. Exercise, physiotherapy, and medication can improve quality of life.'
+  },
+  {
+    id:19, name:'Urinary Tract Infection (UTI)', severity:'Medium',
+    symptoms:[51,50,31,1,6,28],
+    desc:'A bacterial infection of any part of the urinary system — kidneys, bladder, ureters, or urethra.',
+    rec:'Consult a doctor for a urine culture and appropriate antibiotics. Increase water intake.'
+  },
+  {
+    id:20, name:'Conjunctivitis (Pink Eye)', severity:'Low',
+    symptoms:[47,48,43,12],
+    desc:'Inflammation or infection of the transparent membrane lining the eyelid and eyeball.',
+    rec:'Antibiotic eye drops for bacterial type. Avoid touching eyes; wash hands frequently.'
+  },
+];
+
+// ════════════════════════════════════════
+//  CATEGORY CONFIG
+// ════════════════════════════════════════
+const CAT_CONFIG = {
+  'General':         { icon:'🌡️', color:'#FFF0E6', iconBg:'#FFD5B0' },
+  'Neurological':    { icon:'🧠', color:'#EEF0FF', iconBg:'#C5C9F7' },
+  'Respiratory':     { icon:'🫁', color:'#E6F5FF', iconBg:'#A8D8F0' },
+  'Gastrointestinal':{ icon:'🫃', color:'#E6FFF7', iconBg:'#A0EDD4' },
+  'Musculoskeletal': { icon:'🦴', color:'#FFF5E6', iconBg:'#FBCF8A' },
+  'Skin & Eyes':     { icon:'👁️', color:'#F5E6FF', iconBg:'#D5AAEE' },
+  'Urinary & Other': { icon:'💧', color:'#E6F0FF', iconBg:'#AABFF5' },
+};
+
+// ════════════════════════════════════════
+//  BUILD UI
+// ════════════════════════════════════════
+const byCategory = {};
+SYMPTOMS.forEach(s => {
+  if (!byCategory[s.cat]) byCategory[s.cat] = [];
+  byCategory[s.cat].push(s);
+});
+
+const grid = document.getElementById('cats-grid');
+Object.entries(byCategory).forEach(([cat, syms]) => {
+  const cfg = CAT_CONFIG[cat] || { icon:'💊', color:'#EEF', iconBg:'#CCD' };
+  const card = document.createElement('div');
+  card.className = 'cat-card';
+  card.innerHTML = `
+    <div class="cat-header">
+      <div class="cat-icon" style="background:${cfg.iconBg}">${cfg.icon}</div>
+      <span class="cat-name">${cat}</span>
+      <span class="cat-count">${syms.length}</span>
+    </div>
+    <div class="symptoms-list">
+      ${syms.map(s => `
+        <div class="symptom-item visible" data-name="${s.name.toLowerCase()}" data-id="${s.id}">
+          <label class="symptom-label">
+            <input type="checkbox" value="${s.id}" onchange="updateCount()"/>
+            <div class="check-box">
+              <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="symptom-text">${s.name}</span>
+          </label>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// ════════════════════════════════════════
+//  INTERACTIONS
+// ════════════════════════════════════════
+function updateCount() {
+  const n = document.querySelectorAll('input[type=checkbox]:checked').length;
+  document.getElementById('count-num').textContent = n;
+  document.getElementById('error-msg').style.display = 'none';
+  if (n >= 1) {
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('s2n').textContent = '✓';
+  } else {
+    document.getElementById('step2').classList.remove('active','done');
+    document.getElementById('s2n').textContent = '2';
+  }
+}
+
+function clearAll() {
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+  updateCount();
+}
+
+function filterSymptoms(q) {
+  const query = q.toLowerCase();
+  document.querySelectorAll('.symptom-item').forEach(el => {
+    const match = !query || el.dataset.name.includes(query);
+    el.classList.toggle('visible', match);
+  });
+}
+
+// ════════════════════════════════════════
+//  PREDICTION ENGINE
+// ════════════════════════════════════════
+function runPrediction() {
+  const selected = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
+                       .map(cb => parseInt(cb.value));
+  if (!selected.length) {
+    const err = document.getElementById('error-msg');
+    err.style.display = 'block';
+    err.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  // Score each disease
+  const THRESHOLD = 0.25;
+  const scored = DISEASES.map(d => {
+    const matched = d.symptoms.filter(s => selected.includes(s)).length;
+    const pct = matched / d.symptoms.length;
+    return { ...d, matched, pct };
+  }).filter(d => d.pct >= THRESHOLD)
+    .sort((a,b) => b.pct - a.pct)
+    .slice(0, 6);
+
+  // Show results
+  document.getElementById('symptom-section').style.display = 'none';
+  const rs = document.getElementById('results-section');
+  rs.style.display = 'block';
+  rs.scrollIntoView({ behavior:'smooth' });
+
+  // Steps
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step2').classList.add('done');
+  document.getElementById('s2n').textContent = '✓';
+  document.getElementById('step3').classList.add('active');
+
+  document.getElementById('results-subtitle').textContent =
+    `${selected.length} symptom${selected.length>1?'s':''} analysed · ${scored.length} condition${scored.length!==1?'s':''} found`;
+
+  const list = document.getElementById('results-list');
+  list.innerHTML = '';
+
+  if (!scored.length) {
+    list.innerHTML = `<div class="no-match">
+      <div class="icon">🔍</div>
+      <h3>No Strong Match Found</h3>
+      <p>The selected symptom combination doesn't closely match any condition in the database.<br/>Try selecting more symptoms or consult a healthcare professional.</p>
+    </div>`;
+    return;
+  }
+
+  scored.forEach((d, i) => {
+    const sevClass = d.severity === 'Low' ? 'sev-low' : d.severity === 'Medium' ? 'sev-med' : 'sev-high';
+    const pctDisplay = Math.round(d.pct * 100);
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="result-top">
+        <span class="result-rank">#${i+1}</span>
+        <span class="result-name">${d.name}</span>
+        <span class="severity-badge ${sevClass}">${d.severity} Severity</span>
+      </div>
+      <div class="match-bar-wrap">
+        <div class="match-bar-bg">
+          <div class="match-bar-fill" style="width:0%" data-target="${pctDisplay}%"></div>
+        </div>
+        <span class="match-pct">${pctDisplay}%</span>
+      </div>
+      <div class="result-body">
+        <div class="result-col">
+          <div class="result-col-label">About this Condition</div>
+          <p>${d.desc}</p>
+        </div>
+        <div class="result-col">
+          <div class="result-rec">
+            <strong>Recommended Action</strong>
+            ${d.rec}
+          </div>
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.match-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target;
+    });
+  });
+}
+
+// ════════════════════════════════════════
+//  BACK
+// ════════════════════════════════════════
+function goBack() {
+  document.getElementById('results-section').style.display = 'none';
+  const sym = document.getElementById('symptom-section');
+  sym.style.display = 'block';
+  sym.style.animation = 'none';
+  setTimeout(() => sym.style.animation = '', 10);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.getElementById('step3').classList.remove('active');
+  document.getElementById('step2').classList.remove('done');
+  document.getElementById('s2n').textContent = '2';
+
+  clearAll();
+  document.getElementById('searchInput').value = '';
+  filterSymptoms('');
+}
+</script>
+</body>
+</html>
