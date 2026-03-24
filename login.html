@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Disease Prediction System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --navy-mid: #132944;
+    --teal: #0C8B7E;
+    --teal-light: #14B0A0;
+    --sky: #E0F4F2;
+    --bg: #F2F6FA;
+    --white: #FFFFFF;
+    --text: #0F1F35;
+    --muted: #5A7090;
+    --border: #D0DDE8;
+    --green: #1AAF5D;
+    --red: #D93025;
+    --red-bg: #FDECEA;
+    --shadow: 0 4px 24px rgba(11,31,58,0.10);
+    --shadow-card: 0 2px 12px rgba(11,31,58,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: var(--teal);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem; font-weight: 400;
+  }
+  .header-text p {
+    font-size: 0.72rem; color: #8AACCA;
+    margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .badge-header {
+    margin-left: auto;
+    background: rgba(12,139,126,0.22);
+    color: #5FE3D4;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid rgba(95,227,212,0.25);
+    text-transform: uppercase; white-space: nowrap;
+  }
+
+  /* ── PAGE LAYOUT ── */
+  .page-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    background: linear-gradient(145deg, var(--navy-mid) 0%, #0D3A5C 60%, #0A2A44 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .left-panel::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(12,139,126,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+    top: -80px; right: -80px;
+  }
+  .left-content { position: relative; z-index: 1; }
+  .left-tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(12,139,126,0.25);
+    border: 1px solid rgba(20,176,160,0.35);
+    color: var(--teal-light);
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px; border-radius: 20px;
+    margin-bottom: 28px;
+  }
+  .left-tag span { font-size: 12px; }
+  .left-panel h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 400; line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .left-panel h2 em { color: var(--teal-light); font-style: italic; }
+  .left-panel p {
+    font-size: 0.95rem; color: #90B4CC;
+    line-height: 1.7; margin-bottom: 40px;
+    max-width: 380px;
+  }
+
+  /* Feature list */
+  .features { display: flex; flex-direction: column; gap: 14px; }
+  .feature-item {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 13px 16px;
+  }
+  .feature-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: rgba(12,139,126,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .feature-text strong {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: #fff; margin-bottom: 2px;
+  }
+  .feature-text span { font-size: 0.78rem; color: #7AACC4; }
+
+  /* ── RIGHT PANEL (FORM) ── */
+  .right-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    background: var(--bg);
+  }
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 44px 40px;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header { margin-bottom: 32px; }
+  .card-header h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem; font-weight: 400;
+    color: var(--navy); margin-bottom: 6px;
+  }
+  .card-header p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  /* Tabs */
+  .tab-row {
+    display: flex;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 28px;
+    gap: 4px;
+  }
+  .tab-btn {
+    flex: 1; padding: 9px;
+    border: none; border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    background: transparent; color: var(--muted);
+  }
+  .tab-btn.active {
+    background: var(--white);
+    color: var(--navy);
+    box-shadow: 0 1px 6px rgba(11,31,58,0.10);
+    font-weight: 600;
+  }
+
+  /* Form */
+  .form-panel { display: none; }
+  .form-panel.active { display: block; }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 0.82rem; font-weight: 600;
+    color: var(--navy); margin-bottom: 7px;
+    letter-spacing: 0.02em;
+  }
+  .input-wrap { position: relative; }
+  .input-wrap .input-icon {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px; pointer-events: none;
+    opacity: 0.5;
+  }
+  .input-wrap input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-wrap input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(12,139,126,0.10);
+  }
+  .input-wrap input.error { border-color: var(--red); }
+
+  /* Password toggle */
+  .pwd-toggle {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; font-size: 17px;
+    color: var(--muted); padding: 0;
+    line-height: 1;
+  }
+  .pwd-toggle:hover { color: var(--teal); }
+
+  /* Inline error */
+  .field-error {
+    display: none;
+    font-size: 0.78rem; color: var(--red);
+    margin-top: 5px; padding-left: 2px;
+  }
+
+  /* Forgot */
+  .forgot-row {
+    display: flex; justify-content: flex-end;
+    margin-top: -8px; margin-bottom: 18px;
+  }
+  .forgot-row a {
+    font-size: 0.8rem; color: var(--teal);
+    text-decoration: none; font-weight: 500;
+  }
+  .forgot-row a:hover { text-decoration: underline; }
+
+  /* Alert banners */
+  .alert {
+    display: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+  .alert.error { background: var(--red-bg); color: var(--red); border: 1px solid #F5B9B5; animation: shake 0.4s ease; }
+  .alert.success { background: #E6FAF0; color: var(--green); border: 1px solid #A3E6C2; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--teal) 0%, #07706A 100%);
+    color: #fff; border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.02em;
+    box-shadow: 0 5px 18px rgba(12,139,126,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 4px;
+  }
+  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(12,139,126,0.45); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+  /* Spinner inside button */
+  .btn-spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Divider */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 22px 0;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* Demo credentials */
+  .demo-creds {
+    background: var(--sky);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.80rem;
+    color: #0D5C55;
+    line-height: 1.8;
+  }
+  .demo-creds strong { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--teal); margin-bottom: 4px; }
+  .demo-creds code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(12,139,126,0.12);
+    padding: 1px 6px; border-radius: 4px; font-size: 0.82rem;
+  }
+  .demo-fill {
+    display: inline-flex; align-items: center; gap: 5px;
+    cursor: pointer; color: var(--teal); font-weight: 600;
+    font-size: 0.78rem; margin-top: 8px;
+    background: none; border: none; padding: 0;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .demo-fill:hover { color: #07706A; }
+
+  /* Password strength */
+  .pwd-strength { margin-top: 8px; }
+  .strength-bar-bg {
+    height: 4px; background: var(--border);
+    border-radius: 4px; overflow: hidden; margin-bottom: 4px;
+  }
+  .strength-bar-fill {
+    height: 100%; border-radius: 4px;
+    width: 0%; transition: width 0.3s, background 0.3s;
+  }
+  .strength-label { font-size: 0.74rem; color: var(--muted); }
+
+  /* Terms checkbox */
+  .terms-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 18px 0 4px;
+  }
+  .terms-row input[type=checkbox] { margin-top: 3px; accent-color: var(--teal); width: 15px; height: 15px; flex-shrink: 0; }
+  .terms-row label { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
+  .terms-row label a { color: var(--teal); text-decoration: none; }
+  .terms-row label a:hover { text-decoration: underline; }
+
+  /* Footer */
+  footer {
+    background: var(--navy); color: #8AACCA;
+    text-align: center; padding: 18px;
+    font-size: 0.78rem; line-height: 1.7;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .page-body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 32px 20px; align-items: flex-start; padding-top: 40px; }
+    .login-card { padding: 32px 24px; }
+    .badge-header { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-icon">🩺</div>
+    <div class="header-text">
+      <h1>Disease Prediction System</h1>
+      <p>K J Somaiya School of Engineering &nbsp;·&nbsp; Dept. of Computer Engineering</p>
+    </div>
+    <div class="badge-header">Academic Project 2025–26</div>
+  </div>
+</header>
+
+<!-- BODY -->
+<div class="page-body">
+
+  <!-- LEFT: Info Panel -->
+  <div class="left-panel">
+    <div class="left-content">
+      <div class="left-tag"><span>🔐</span> Secure Access</div>
+      <h2>Your Health,<br/><em>Predicted Smart</em></h2>
+      <p>Sign in to access the symptom checker, save your past sessions, and get personalised disease predictions powered by a curated medical database.</p>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">🩺</div>
+          <div class="feature-text">
+            <strong>20 Common Diseases</strong>
+            <span>Dengue, Typhoid, COVID-19, Diabetes &amp; more</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-text">
+            <strong>56 Symptoms Mapped</strong>
+            <span>Across 7 categories with match scoring</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <strong>Ranked Results</strong>
+            <span>Colour-coded severity &amp; actionable advice</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-text">
+            <strong>Private &amp; Secure</strong>
+            <span>Your data stays on your device</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form Panel -->
+  <div class="right-panel">
+    <div class="login-card">
+
+      <div class="card-header">
+        <h3>Welcome back</h3>
+        <p>Sign in to continue, or create a new account below.</p>
+      </div>
+
+      <!-- TABS -->
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- ═══ LOGIN FORM ═══ -->
+      <div class="form-panel active" id="panel-login">
+
+        <div class="alert error" id="login-error"></div>
+        <div class="alert success" id="login-success"></div>
+
+        <div class="field">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <div class="field-error" id="err-login-email">Please enter a valid email.</div>
+        </div>
+
+        <div class="field">
+          <label for="login-pwd">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="login-pwd" placeholder="Enter your password" autocomplete="current-password"/>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('login-pwd', this)" title="Show/hide password">👁️</button>
+          </div>
+          <div class="field-error" id="err-login-pwd">Please enter your password.</div>
+        </div>
+
+        <div class="forgot-row"><a href="#" onclick="showForgot(); return false;">Forgot password?</a></div>
+
+        <button class="btn-submit" id="btn-login" onclick="handleLogin()">
+          <div class="btn-spinner" id="spin-login"></div>
+          <span id="login-btn-text">Sign In</span>
+        </button>
+
+        <div class="divider">or use demo account</div>
+
+        <div class="demo-creds">
+          <strong>Demo Credentials</strong>
+          Email: <code>demo@kjsomaiya.edu.in</code><br/>
+          Password: <code>Demo@1234</code>
+          <br/>
+          <button class="demo-fill" onclick="fillDemo()">⚡ Auto-fill credentials</button>
+        </div>
+
+      </div>
+
+      <!-- ═══ REGISTER FORM ═══ -->
+      <div class="form-panel" id="panel-register">
+
+        <div class="alert error" id="register-error"></div>
+        <div class="alert success" id="register-success"></div>
+
+        <div class="field">
+          <label for="reg-name">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="reg-name" placeholder="Kshitij Kumar" autocomplete="name"/>
+          </div>
+          <div class="field-error" id="err-reg-name">Please enter your full name.</div>
+        </div>
+
+        <div class="field">
+          <label for="reg-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <div class="field-error" id="err-reg-email">Please enter a valid email.</div>
+        </div>
+
+        <div class="field">
+          <label for="reg-pwd">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="reg-pwd" placeholder="Minimum 8 characters" oninput="checkStrength(this.value)" autocomplete="new-password"/>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-pwd', this)" title="Show/hide password">👁️</button>
+          </div>
+          <div class="field-error" id="err-reg-pwd">Password must be at least 8 characters.</div>
+          <div class="pwd-strength">
+            <div class="strength-bar-bg"><div class="strength-bar-fill" id="strength-bar"></div></div>
+            <div class="strength-label" id="strength-label">Enter a password</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-confirm">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-confirm" placeholder="Repeat your password" autocomplete="new-password"/>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-confirm', this)" title="Show/hide password">👁️</button>
+          </div>
+          <div class="field-error" id="err-reg-confirm">Passwords do not match.</div>
+        </div>
+
+        <div class="terms-row">
+          <input type="checkbox" id="terms"/>
+          <label for="terms">I agree to the <a href="#">Terms of Use</a> and acknowledge this tool is for <a href="#">educational purposes only</a>.</label>
+        </div>
+        <div class="field-error" id="err-terms" style="margin-top:4px;margin-bottom:0;">You must accept the terms to register.</div>
+
+        <button class="btn-submit" id="btn-register" onclick="handleRegister()" style="margin-top:16px;">
+          <div class="btn-spinner" id="spin-register"></div>
+          <span id="register-btn-text">Create Account</span>
+        </button>
+
+      </div>
+      <!-- end register panel -->
+
+    </div><!-- /login-card -->
+  </div><!-- /right-panel -->
+
+</div><!-- /page-body -->
+
+<footer>
+  <div>Disease Prediction System — K J Somaiya School of Engineering, Somaiya Vidyavihar University, Mumbai – 400 077</div>
+  <div>Kshitij Kumar (16010124159) &nbsp;·&nbsp; Aryan Mahimkar (16010124165) &nbsp;·&nbsp; Usman Kazi (16010124148) &nbsp;·&nbsp; AY 2025–26</div>
+</footer>
+
+<script>
+// DEMO USER
+const DEMO_USER = { email: 'demo@kjsomaiya.edu.in', password: 'Demo@1234', name: 'Demo User' };
+
+// STORE USERS
+function getUsers() {
+  return JSON.parse(localStorage.getItem('dp_users') || '[]');
+}
+function saveUsers(users) {
+  localStorage.setItem('dp_users', JSON.stringify(users));
+}
+
+// ADD DEMO USER
+(function() {
+  const users = getUsers();
+  if (!users.find(u => u.email === DEMO_USER.email)) {
+    users.push(DEMO_USER);
+    saveUsers(users);
+  }
+})();
+
+// TAB SWITCH
+function switchTab(tab) {
+  document.getElementById('panel-login').style.display = (tab === 'login') ? 'block' : 'none';
+  document.getElementById('panel-register').style.display = (tab === 'register') ? 'block' : 'none';
+}
+
+// PASSWORD TOGGLE
+function togglePwd(id, btn) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+
+// DEMO FILL
+function fillDemo() {
+  document.getElementById('login-email').value = DEMO_USER.email;
+  document.getElementById('login-pwd').value = DEMO_USER.password;
+}
+
+// LOGIN
+function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+
+  if (!email || !pwd) {
+    alert("Enter email & password");
+    return;
+  }
+
+  const users = getUsers();
+  const user = users.find(u => u.email === email && u.password === pwd);
+
+  if (!user) {
+    alert("Invalid credentials");
+    return;
+  }
+
+  sessionStorage.setItem('dp_user', JSON.stringify(user));
+  window.location.replace('index.html');
+}
+
+// REGISTER
+function handleRegister() {
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const pwd = document.getElementById('reg-pwd').value;
+
+  if (!name || !email || !pwd) {
+    alert("Fill all fields");
+    return;
+  }
+
+  const users = getUsers();
+  users.push({ name, email, password: pwd });
+  saveUsers(users);
+
+  alert("Account created! Please login.");
+  switchTab('login');
+}
+
+// EXISTING USER BANNER
+(function () {
+  const user = sessionStorage.getItem('dp_user');
+  if (user) {
+    const u = JSON.parse(user);
+    const banner = document.createElement('div');
+
+    banner.style.cssText =
+      'background:#E6FAF0;border-bottom:1px solid #A3E6C2;color:#0D5C55;text-align:center;padding:10px;';
+
+    banner.innerHTML =
+      `👋 You're already signed in as <strong>${u.name}</strong>. 
+       <a href="index.html">Go to the app →</a>`;
+
+    document.querySelector('header').after(banner);
+  }
+})();
+</script>
+</body>
+</html>
