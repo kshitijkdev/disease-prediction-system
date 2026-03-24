@@ -582,18 +582,31 @@
 </footer>
 
 <script>
+<<<<<<< HEAD
 // DEMO USER
 const DEMO_USER = { email: 'demo@kjsomaiya.edu.in', password: 'Demo@1234', name: 'Demo User' };
 
 // STORE USERS
+=======
+// ══════════════════════════════════════
+//  DEMO USERS stored in localStorage
+//  (In real app, replace with PHP/MySQL auth)
+// ══════════════════════════════════════
+const DEMO_USER = { email: 'demo@kjsomaiya.edu.in', password: 'Demo@1234', name: 'Demo User' };
+
+>>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
 function getUsers() {
   return JSON.parse(localStorage.getItem('dp_users') || '[]');
 }
 function saveUsers(users) {
   localStorage.setItem('dp_users', JSON.stringify(users));
 }
+<<<<<<< HEAD
 
 // ADD DEMO USER
+=======
+// seed demo user on first load
+>>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
 (function() {
   const users = getUsers();
   if (!users.find(u => u.email === DEMO_USER.email)) {
@@ -602,6 +615,7 @@ function saveUsers(users) {
   }
 })();
 
+<<<<<<< HEAD
 // TAB SWITCH
 function switchTab(tab) {
   document.getElementById('panel-login').style.display = (tab === 'login') ? 'block' : 'none';
@@ -676,6 +690,224 @@ function handleRegister() {
       `👋 You're already signed in as <strong>${u.name}</strong>. 
        <a href="index.html">Go to the app →</a>`;
 
+=======
+// ══════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+  document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+  clearAlerts();
+}
+
+function clearAlerts() {
+  document.querySelectorAll('.alert').forEach(a => { a.style.display = 'none'; a.textContent = ''; });
+  document.querySelectorAll('.field-error').forEach(e => e.style.display = 'none');
+  document.querySelectorAll('input').forEach(i => i.classList.remove('error'));
+}
+
+// ══════════════════════════════════════
+//  SHOW / HIDE PASSWORD
+// ══════════════════════════════════════
+function togglePwd(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const showing = inp.type === 'text';
+  inp.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? '👁️' : '🙈';
+}
+
+// ══════════════════════════════════════
+//  AUTO-FILL DEMO
+// ══════════════════════════════════════
+function fillDemo() {
+  document.getElementById('login-email').value = DEMO_USER.email;
+  document.getElementById('login-pwd').value = DEMO_USER.password;
+  // brief highlight
+  ['login-email','login-pwd'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'var(--teal)';
+    setTimeout(() => el.style.borderColor = '', 1000);
+  });
+}
+
+// ══════════════════════════════════════
+//  PASSWORD STRENGTH
+// ══════════════════════════════════════
+function checkStrength(val) {
+  const bar = document.getElementById('strength-bar');
+  const label = document.getElementById('strength-label');
+  let score = 0;
+  if (val.length >= 8)                  score++;
+  if (/[A-Z]/.test(val))               score++;
+  if (/[0-9]/.test(val))               score++;
+  if (/[^A-Za-z0-9]/.test(val))        score++;
+
+  const levels = [
+    { w: '0%',   color: 'var(--border)',   text: 'Enter a password' },
+    { w: '25%',  color: 'var(--red)',      text: 'Weak' },
+    { w: '50%',  color: '#F08C00',         text: 'Fair' },
+    { w: '75%',  color: '#3BB87F',         text: 'Good' },
+    { w: '100%', color: 'var(--green)',    text: 'Strong 💪' },
+  ];
+  const lvl = val.length === 0 ? levels[0] : levels[score];
+  bar.style.width   = lvl.w;
+  bar.style.background = lvl.color;
+  label.textContent = lvl.text;
+  label.style.color = lvl.color === 'var(--border)' ? 'var(--muted)' : lvl.color;
+}
+
+// ══════════════════════════════════════
+//  FIELD VALIDATION HELPERS
+// ══════════════════════════════════════
+function showFieldError(inputId, errId) {
+  document.getElementById(inputId).classList.add('error');
+  document.getElementById(errId).style.display = 'block';
+}
+function clearFieldError(inputId, errId) {
+  document.getElementById(inputId).classList.remove('error');
+  document.getElementById(errId).style.display = 'none';
+}
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+// ══════════════════════════════════════
+//  FORGOT PASSWORD (mock)
+// ══════════════════════════════════════
+function showForgot() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email || !isValidEmail(email)) {
+    showAlert('login-error', '⚠️ Enter your email address above first, then click Forgot Password.');
+    return;
+  }
+  showAlert('login-success', `✅ Password reset instructions sent to ${email}. (Demo: no actual email sent.)`);
+}
+
+// ══════════════════════════════════════
+//  ALERT HELPER
+// ══════════════════════════════════════
+function showAlert(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ══════════════════════════════════════
+//  LOGIN HANDLER
+// ══════════════════════════════════════
+function handleLogin() {
+  clearAlerts();
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+  let valid = true;
+
+  if (!email || !isValidEmail(email)) { showFieldError('login-email','err-login-email'); valid = false; }
+  if (!pwd)                            { showFieldError('login-pwd',  'err-login-pwd');   valid = false; }
+  if (!valid) return;
+
+  // Fake loading
+  setLoading('login', true);
+  setTimeout(() => {
+    const users = getUsers();
+    const user  = users.find(u => u.email === email && u.password === pwd);
+    setLoading('login', false);
+
+    if (!user) {
+      showAlert('login-error', '❌ Incorrect email or password. Use the demo credentials below.');
+      document.getElementById('login-pwd').value = '';
+      return;
+    }
+
+    showAlert('login-success', `✅ Welcome back, ${user.name}! Redirecting to the app…`);
+    setTimeout(() => {
+      // Store session
+      sessionStorage.setItem('dp_user', JSON.stringify({ name: user.name, email: user.email }));
+      window.location.href = 'disease_prediction.html';
+    }, 1200);
+  }, 900);
+}
+
+// ══════════════════════════════════════
+//  REGISTER HANDLER
+// ══════════════════════════════════════
+function handleRegister() {
+  clearAlerts();
+  const name    = document.getElementById('reg-name').value.trim();
+  const email   = document.getElementById('reg-email').value.trim();
+  const pwd     = document.getElementById('reg-pwd').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const terms   = document.getElementById('terms').checked;
+  let valid = true;
+
+  if (!name)                       { showFieldError('reg-name',    'err-reg-name');    valid = false; }
+  if (!email || !isValidEmail(email)){ showFieldError('reg-email', 'err-reg-email');   valid = false; }
+  if (!pwd || pwd.length < 8)      { showFieldError('reg-pwd',    'err-reg-pwd');      valid = false; }
+  if (pwd !== confirm)             { showFieldError('reg-confirm', 'err-reg-confirm'); valid = false; }
+  if (!terms) {
+    document.getElementById('err-terms').style.display = 'block';
+    valid = false;
+  }
+  if (!valid) return;
+
+  setLoading('register', true);
+  setTimeout(() => {
+    const users = getUsers();
+    if (users.find(u => u.email === email)) {
+      setLoading('register', false);
+      showAlert('register-error', '❌ An account with this email already exists. Please sign in.');
+      return;
+    }
+    users.push({ name, email, password: pwd });
+    saveUsers(users);
+    setLoading('register', false);
+    showAlert('register-success', `✅ Account created for ${name}! Switching to Sign In…`);
+    setTimeout(() => {
+      // pre-fill login
+      document.getElementById('login-email').value = email;
+      document.getElementById('login-pwd').value   = pwd;
+      switchTab('login');
+    }, 1400);
+  }, 800);
+}
+
+// ══════════════════════════════════════
+//  LOADING STATE
+// ══════════════════════════════════════
+function setLoading(form, loading) {
+  const btn  = document.getElementById(`btn-${form}`);
+  const spin = document.getElementById(`spin-${form}`);
+  const txt  = document.getElementById(`${form}-btn-text`);
+  btn.disabled     = loading;
+  spin.style.display = loading ? 'block' : 'none';
+  txt.style.opacity  = loading ? '0' : '1';
+}
+
+// ══════════════════════════════════════
+//  ENTER KEY SUPPORT
+// ══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.form-panel.active').id;
+  if (active === 'panel-login')    handleLogin();
+  if (active === 'panel-register') handleRegister();
+});
+
+// ══════════════════════════════════════
+//  CHECK IF ALREADY LOGGED IN
+// ══════════════════════════════════════
+(function() {
+  const user = sessionStorage.getItem('dp_user');
+  if (user) {
+    const u = JSON.parse(user);
+    // show a banner instead of hard redirect so user can still see login
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:#E6FAF0;border-bottom:1px solid #A3E6C2;color:#0D5C55;text-align:center;padding:10px;font-size:0.85rem;font-weight:500;';
+    banner.innerHTML = `👋 You're already signed in as <strong>${u.name}</strong>. <a href="disease_prediction.html" style="color:var(--teal);font-weight:700;">Go to the app →</a>`;
+>>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
     document.querySelector('header').after(banner);
   }
 })();
