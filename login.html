@@ -7,395 +7,112 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
   :root {
-    --navy: #0B1F3A;
-    --navy-mid: #132944;
-    --teal: #0C8B7E;
-    --teal-light: #14B0A0;
-    --sky: #E0F4F2;
-    --bg: #F2F6FA;
-    --white: #FFFFFF;
-    --text: #0F1F35;
-    --muted: #5A7090;
-    --border: #D0DDE8;
-    --green: #1AAF5D;
-    --red: #D93025;
-    --red-bg: #FDECEA;
-    --shadow: 0 4px 24px rgba(11,31,58,0.10);
-    --shadow-card: 0 2px 12px rgba(11,31,58,0.08);
+    --navy:#0B1F3A; --navy-mid:#132944; --teal:#0C8B7E; --teal-light:#14B0A0;
+    --sky:#E0F4F2; --bg:#F2F6FA; --white:#FFFFFF; --text:#0F1F35;
+    --muted:#5A7090; --border:#D0DDE8;
+    --green:#1AAF5D; --red:#D93025; --red-bg:#FDECEA;
+    --shadow:0 4px 24px rgba(11,31,58,0.10);
   }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.25);}
+  .header-inner{max-width:1100px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:16px;}
+  .logo-icon{width:44px;height:44px;background:var(--teal);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .header-text h1{font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400;}
+  .header-text p{font-size:0.72rem;color:#8AACCA;margin-top:2px;letter-spacing:0.04em;text-transform:uppercase;}
+  .badge-header{margin-left:auto;background:rgba(12,139,126,0.22);color:#5FE3D4;font-size:0.7rem;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:20px;border:1px solid rgba(95,227,212,0.25);text-transform:uppercase;white-space:nowrap;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+  /* cookie banner */
+  #cookie-banner{display:none;background:#FFF4E0;border-bottom:1px solid #FBCF8A;padding:10px 24px;font-size:0.82rem;color:#5A3A00;text-align:center;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;}
+  #cookie-banner button{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:5px 14px;font-size:0.8rem;font-weight:600;cursor:pointer;}
 
-  /* ── HEADER ── */
-  header {
-    background: var(--navy);
-    color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
-  }
-  .header-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .logo-icon {
-    width: 44px; height: 44px;
-    background: var(--teal);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .header-text h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.25rem; font-weight: 400;
-  }
-  .header-text p {
-    font-size: 0.72rem; color: #8AACCA;
-    margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .badge-header {
-    margin-left: auto;
-    background: rgba(12,139,126,0.22);
-    color: #5FE3D4;
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
-    padding: 5px 12px; border-radius: 20px;
-    border: 1px solid rgba(95,227,212,0.25);
-    text-transform: uppercase; white-space: nowrap;
-  }
+  /* already logged in banner */
+  #logged-in-banner{display:none;background:#E6FAF0;border-bottom:1px solid #A3E6C2;color:#0D5C55;text-align:center;padding:10px;font-size:0.85rem;font-weight:500;}
+  #logged-in-banner a{color:var(--teal);font-weight:700;text-decoration:none;}
 
-  /* ── PAGE LAYOUT ── */
-  .page-body {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: calc(100vh - 80px);
-  }
+  .page-body{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 80px);}
 
-  /* ── LEFT PANEL ── */
-  .left-panel {
-    background: linear-gradient(145deg, var(--navy-mid) 0%, #0D3A5C 60%, #0A2A44 100%);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 56px;
-    position: relative;
-    overflow: hidden;
-  }
-  .left-panel::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(12,139,126,0.25) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .left-panel::after {
-    content: '';
-    position: absolute;
-    width: 320px; height: 320px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.05);
-    top: -80px; right: -80px;
-  }
-  .left-content { position: relative; z-index: 1; }
-  .left-tag {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(12,139,126,0.25);
-    border: 1px solid rgba(20,176,160,0.35);
-    color: var(--teal-light);
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 5px 14px; border-radius: 20px;
-    margin-bottom: 28px;
-  }
-  .left-tag span { font-size: 12px; }
-  .left-panel h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 3vw, 2.8rem);
-    font-weight: 400; line-height: 1.15;
-    margin-bottom: 20px;
-  }
-  .left-panel h2 em { color: var(--teal-light); font-style: italic; }
-  .left-panel p {
-    font-size: 0.95rem; color: #90B4CC;
-    line-height: 1.7; margin-bottom: 40px;
-    max-width: 380px;
-  }
+  /* LEFT PANEL */
+  .left-panel{background:linear-gradient(145deg,var(--navy-mid) 0%,#0D3A5C 60%,#0A2A44 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:60px 56px;position:relative;overflow:hidden;}
+  .left-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 80%,rgba(12,139,126,0.25) 0%,transparent 60%);pointer-events:none;}
+  .left-content{position:relative;z-index:1;}
+  .left-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(12,139,126,0.25);border:1px solid rgba(20,176,160,0.35);color:var(--teal-light);font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:28px;}
+  .left-panel h2{font-family:'DM Serif Display',serif;font-size:clamp(2rem,3vw,2.8rem);font-weight:400;line-height:1.15;margin-bottom:20px;}
+  .left-panel h2 em{color:var(--teal-light);font-style:italic;}
+  .left-panel p{font-size:0.95rem;color:#90B4CC;line-height:1.7;margin-bottom:40px;max-width:380px;}
+  .features{display:flex;flex-direction:column;gap:14px;}
+  .feature-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:13px 16px;}
+  .feature-icon{width:36px;height:36px;border-radius:9px;background:rgba(12,139,126,0.25);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .feature-text strong{display:block;font-size:0.88rem;font-weight:600;color:#fff;margin-bottom:2px;}
+  .feature-text span{font-size:0.78rem;color:#7AACC4;}
 
-  /* Feature list */
-  .features { display: flex; flex-direction: column; gap: 14px; }
-  .feature-item {
-    display: flex; align-items: center; gap: 14px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 13px 16px;
-  }
-  .feature-icon {
-    width: 36px; height: 36px; border-radius: 9px;
-    background: rgba(12,139,126,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0;
-  }
-  .feature-text strong {
-    display: block; font-size: 0.88rem; font-weight: 600;
-    color: #fff; margin-bottom: 2px;
-  }
-  .feature-text span { font-size: 0.78rem; color: #7AACC4; }
+  /* RIGHT PANEL */
+  .right-panel{display:flex;align-items:center;justify-content:center;padding:48px 40px;background:var(--bg);}
+  .login-card{width:100%;max-width:420px;background:var(--white);border:1.5px solid var(--border);border-radius:24px;box-shadow:var(--shadow);padding:44px 40px;animation:fadeUp 0.5s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .card-header{margin-bottom:32px;}
+  .card-header h3{font-family:'DM Serif Display',serif;font-size:1.75rem;font-weight:400;color:var(--navy);margin-bottom:6px;}
+  .card-header p{font-size:0.88rem;color:var(--muted);line-height:1.5;}
 
-  /* ── RIGHT PANEL (FORM) ── */
-  .right-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 40px;
-    background: var(--bg);
-  }
-  .login-card {
-    width: 100%;
-    max-width: 420px;
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-    padding: 44px 40px;
-    animation: fadeUp 0.5s ease both;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  .tab-row{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:28px;gap:4px;}
+  .tab-btn{flex:1;padding:9px;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);}
+  .tab-btn.active{background:var(--white);color:var(--navy);box-shadow:0 1px 6px rgba(11,31,58,0.10);font-weight:600;}
 
-  .card-header { margin-bottom: 32px; }
-  .card-header h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.75rem; font-weight: 400;
-    color: var(--navy); margin-bottom: 6px;
-  }
-  .card-header p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  .form-panel{display:none;}
+  .form-panel.active{display:block;}
 
-  /* Tabs */
-  .tab-row {
-    display: flex;
-    background: var(--bg);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 28px;
-    gap: 4px;
-  }
-  .tab-btn {
-    flex: 1; padding: 9px;
-    border: none; border-radius: 9px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-    background: transparent; color: var(--muted);
-  }
-  .tab-btn.active {
-    background: var(--white);
-    color: var(--navy);
-    box-shadow: 0 1px 6px rgba(11,31,58,0.10);
-    font-weight: 600;
-  }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:0.82rem;font-weight:600;color:var(--navy);margin-bottom:7px;letter-spacing:0.02em;}
+  .input-wrap{position:relative;}
+  .input-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;opacity:0.5;}
+  .input-wrap input{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--border);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+  .input-wrap input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(12,139,126,0.10);}
+  .input-wrap input.error{border-color:var(--red);}
+  .pwd-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:var(--muted);padding:0;line-height:1;}
+  .field-error{display:none;font-size:0.78rem;color:var(--red);margin-top:5px;padding-left:2px;}
 
-  /* Form */
-  .form-panel { display: none; }
-  .form-panel.active { display: block; }
+  /* remember me */
+  .remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .remember-check{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted);cursor:pointer;}
+  .remember-check input{accent-color:var(--teal);width:15px;height:15px;}
+  .forgot-link{font-size:0.8rem;color:var(--teal);text-decoration:none;font-weight:500;}
+  .forgot-link:hover{text-decoration:underline;}
 
-  .field { margin-bottom: 18px; }
-  .field label {
-    display: block;
-    font-size: 0.82rem; font-weight: 600;
-    color: var(--navy); margin-bottom: 7px;
-    letter-spacing: 0.02em;
-  }
-  .input-wrap { position: relative; }
-  .input-wrap .input-icon {
-    position: absolute; left: 14px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px; pointer-events: none;
-    opacity: 0.5;
-  }
-  .input-wrap input {
-    width: 100%;
-    padding: 12px 14px 12px 42px;
-    border: 1.5px solid var(--border);
-    border-radius: 11px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .input-wrap input:focus {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(12,139,126,0.10);
-  }
-  .input-wrap input.error { border-color: var(--red); }
+  .alert{display:none;border-radius:10px;padding:12px 16px;font-size:0.85rem;margin-bottom:18px;font-weight:500;}
+  .alert.error{background:var(--red-bg);color:var(--red);border:1px solid #F5B9B5;animation:shake 0.4s ease;}
+  .alert.success{background:#E6FAF0;color:var(--green);border:1px solid #A3E6C2;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
-  /* Password toggle */
-  .pwd-toggle {
-    position: absolute; right: 14px; top: 50%;
-    transform: translateY(-50%);
-    background: none; border: none;
-    cursor: pointer; font-size: 17px;
-    color: var(--muted); padding: 0;
-    line-height: 1;
-  }
-  .pwd-toggle:hover { color: var(--teal); }
+  .btn-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal) 0%,#07706A 100%);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:0.02em;box-shadow:0 5px 18px rgba(12,139,126,0.35);transition:transform 0.15s,box-shadow 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+  .btn-submit:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(12,139,126,0.45);}
+  .btn-submit:disabled{opacity:0.65;cursor:not-allowed;transform:none;}
+  .btn-spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* Inline error */
-  .field-error {
-    display: none;
-    font-size: 0.78rem; color: var(--red);
-    margin-top: 5px; padding-left: 2px;
-  }
+  .divider{display:flex;align-items:center;gap:12px;margin:22px 0;font-size:0.78rem;color:var(--muted);}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+  .demo-creds{background:var(--sky);border-radius:10px;padding:12px 14px;font-size:0.80rem;color:#0D5C55;line-height:1.8;}
+  .demo-creds strong{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--teal);margin-bottom:4px;}
+  .demo-creds code{font-family:'JetBrains Mono',monospace;background:rgba(12,139,126,0.12);padding:1px 6px;border-radius:4px;font-size:0.82rem;}
+  .demo-fill{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--teal);font-weight:600;font-size:0.78rem;margin-top:8px;background:none;border:none;padding:0;font-family:'DM Sans',sans-serif;text-decoration:underline;text-underline-offset:2px;}
 
-  /* Forgot */
-  .forgot-row {
-    display: flex; justify-content: flex-end;
-    margin-top: -8px; margin-bottom: 18px;
-  }
-  .forgot-row a {
-    font-size: 0.8rem; color: var(--teal);
-    text-decoration: none; font-weight: 500;
-  }
-  .forgot-row a:hover { text-decoration: underline; }
+  .pwd-strength{margin-top:8px;}
+  .strength-bar-bg{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:4px;}
+  .strength-bar-fill{height:100%;border-radius:4px;width:0%;transition:width 0.3s,background 0.3s;}
+  .strength-label{font-size:0.74rem;color:var(--muted);}
 
-  /* Alert banners */
-  .alert {
-    display: none;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    margin-bottom: 18px;
-    font-weight: 500;
-  }
-  .alert.error { background: var(--red-bg); color: var(--red); border: 1px solid #F5B9B5; animation: shake 0.4s ease; }
-  .alert.success { background: #E6FAF0; color: var(--green); border: 1px solid #A3E6C2; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+  .terms-row{display:flex;align-items:flex-start;gap:10px;margin:18px 0 4px;}
+  .terms-row input[type=checkbox]{margin-top:3px;accent-color:var(--teal);width:15px;height:15px;flex-shrink:0;}
+  .terms-row label{font-size:0.80rem;color:var(--muted);line-height:1.5;}
+  .terms-row label a{color:var(--teal);text-decoration:none;}
 
-  /* Submit button */
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--teal) 0%, #07706A 100%);
-    color: #fff; border: none; border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem; font-weight: 600;
-    cursor: pointer; letter-spacing: 0.02em;
-    box-shadow: 0 5px 18px rgba(12,139,126,0.35);
-    transition: transform 0.15s, box-shadow 0.15s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin-top: 4px;
-  }
-  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(12,139,126,0.45); }
-  .btn-submit:active { transform: translateY(0); }
-  .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
-
-  /* Spinner inside button */
-  .btn-spinner {
-    display: none;
-    width: 18px; height: 18px;
-    border: 2px solid rgba(255,255,255,0.4);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Divider */
-  .divider {
-    display: flex; align-items: center; gap: 12px;
-    margin: 22px 0;
-    font-size: 0.78rem; color: var(--muted);
-  }
-  .divider::before, .divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
-
-  /* Demo credentials */
-  .demo-creds {
-    background: var(--sky);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 0.80rem;
-    color: #0D5C55;
-    line-height: 1.8;
-  }
-  .demo-creds strong { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--teal); margin-bottom: 4px; }
-  .demo-creds code {
-    font-family: 'JetBrains Mono', monospace;
-    background: rgba(12,139,126,0.12);
-    padding: 1px 6px; border-radius: 4px; font-size: 0.82rem;
-  }
-  .demo-fill {
-    display: inline-flex; align-items: center; gap: 5px;
-    cursor: pointer; color: var(--teal); font-weight: 600;
-    font-size: 0.78rem; margin-top: 8px;
-    background: none; border: none; padding: 0;
-    font-family: 'DM Sans', sans-serif;
-    text-decoration: underline; text-underline-offset: 2px;
-  }
-  .demo-fill:hover { color: #07706A; }
-
-  /* Password strength */
-  .pwd-strength { margin-top: 8px; }
-  .strength-bar-bg {
-    height: 4px; background: var(--border);
-    border-radius: 4px; overflow: hidden; margin-bottom: 4px;
-  }
-  .strength-bar-fill {
-    height: 100%; border-radius: 4px;
-    width: 0%; transition: width 0.3s, background 0.3s;
-  }
-  .strength-label { font-size: 0.74rem; color: var(--muted); }
-
-  /* Terms checkbox */
-  .terms-row {
-    display: flex; align-items: flex-start; gap: 10px;
-    margin: 18px 0 4px;
-  }
-  .terms-row input[type=checkbox] { margin-top: 3px; accent-color: var(--teal); width: 15px; height: 15px; flex-shrink: 0; }
-  .terms-row label { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
-  .terms-row label a { color: var(--teal); text-decoration: none; }
-  .terms-row label a:hover { text-decoration: underline; }
-
-  /* Footer */
-  footer {
-    background: var(--navy); color: #8AACCA;
-    text-align: center; padding: 18px;
-    font-size: 0.78rem; line-height: 1.7;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .page-body { grid-template-columns: 1fr; }
-    .left-panel { display: none; }
-    .right-panel { padding: 32px 20px; align-items: flex-start; padding-top: 40px; }
-    .login-card { padding: 32px 24px; }
-    .badge-header { display: none; }
-  }
+  footer{background:var(--navy);color:#8AACCA;text-align:center;padding:18px;font-size:0.78rem;line-height:1.7;}
+  @media(max-width:768px){.page-body{grid-template-columns:1fr}.left-panel{display:none}.right-panel{padding:32px 20px;align-items:flex-start;padding-top:40px}.login-card{padding:32px 24px}.badge-header{display:none}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <div class="logo-icon">🩺</div>
@@ -407,70 +124,53 @@
   </div>
 </header>
 
-<!-- BODY -->
-<div class="page-body">
+<!-- Cookie consent banner -->
+<div id="cookie-banner">
+  🍪 This site uses cookies to keep you logged in for 7 days.
+  <button onclick="acceptCookies()">Accept & Continue</button>
+  <button onclick="declineCookies()" style="background:transparent;color:#5A3A00;border:1px solid #FBCF8A;border-radius:8px;padding:5px 14px;font-size:0.8rem;cursor:pointer;">Decline</button>
+</div>
 
-  <!-- LEFT: Info Panel -->
+<!-- Already logged in banner -->
+<div id="logged-in-banner">
+  👋 You're already signed in as <strong id="logged-in-name"></strong>.
+  <a href="index.html">Go to the app →</a> &nbsp;|&nbsp;
+  <a href="#" onclick="logout(); return false;">Sign out</a>
+</div>
+
+<div class="page-body">
+  <!-- LEFT INFO PANEL -->
   <div class="left-panel">
     <div class="left-content">
-      <div class="left-tag"><span>🔐</span> Secure Access</div>
+      <div class="left-tag">🔐 Secure Access</div>
       <h2>Your Health,<br/><em>Predicted Smart</em></h2>
-      <p>Sign in to access the symptom checker, save your past sessions, and get personalised disease predictions powered by a curated medical database.</p>
-
+      <p>Sign in to access the symptom checker. Your session is saved with a secure cookie — no need to log in again for 7 days.</p>
       <div class="features">
-        <div class="feature-item">
-          <div class="feature-icon">🩺</div>
-          <div class="feature-text">
-            <strong>20 Common Diseases</strong>
-            <span>Dengue, Typhoid, COVID-19, Diabetes &amp; more</span>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">🔍</div>
-          <div class="feature-text">
-            <strong>56 Symptoms Mapped</strong>
-            <span>Across 7 categories with match scoring</span>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">📊</div>
-          <div class="feature-text">
-            <strong>Ranked Results</strong>
-            <span>Colour-coded severity &amp; actionable advice</span>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">🔒</div>
-          <div class="feature-text">
-            <strong>Private &amp; Secure</strong>
-            <span>Your data stays on your device</span>
-          </div>
-        </div>
+        <div class="feature-item"><div class="feature-icon">🍪</div><div class="feature-text"><strong>7-day cookie session</strong><span>Stay logged in across browser closes</span></div></div>
+        <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-text"><strong>Secure HttpOnly cookie</strong><span>JS cannot access it — XSS protected</span></div></div>
+        <div class="feature-item"><div class="feature-icon">🩺</div><div class="feature-text"><strong>20 common diseases</strong><span>Dengue, Typhoid, COVID-19 &amp; more</span></div></div>
+        <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-text"><strong>Ranked predictions</strong><span>Match % with severity &amp; advice</span></div></div>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: Form Panel -->
+  <!-- RIGHT FORM PANEL -->
   <div class="right-panel">
     <div class="login-card">
-
       <div class="card-header">
         <h3>Welcome back</h3>
         <p>Sign in to continue, or create a new account below.</p>
       </div>
 
-      <!-- TABS -->
       <div class="tab-row">
         <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
         <button class="tab-btn" onclick="switchTab('register')">Register</button>
       </div>
 
-      <!-- ═══ LOGIN FORM ═══ -->
+      <!-- LOGIN FORM -->
       <div class="form-panel active" id="panel-login">
-
-        <div class="alert error" id="login-error"></div>
+        <div class="alert error"  id="login-error"></div>
         <div class="alert success" id="login-success"></div>
-
         <div class="field">
           <label for="login-email">Email Address</label>
           <div class="input-wrap">
@@ -479,42 +179,39 @@
           </div>
           <div class="field-error" id="err-login-email">Please enter a valid email.</div>
         </div>
-
         <div class="field">
           <label for="login-pwd">Password</label>
           <div class="input-wrap">
             <span class="input-icon">🔑</span>
             <input type="password" id="login-pwd" placeholder="Enter your password" autocomplete="current-password"/>
-            <button class="pwd-toggle" type="button" onclick="togglePwd('login-pwd', this)" title="Show/hide password">👁️</button>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('login-pwd',this)">👁️</button>
           </div>
           <div class="field-error" id="err-login-pwd">Please enter your password.</div>
         </div>
-
-        <div class="forgot-row"><a href="#" onclick="showForgot(); return false;">Forgot password?</a></div>
-
+        <div class="remember-row">
+          <label class="remember-check">
+            <input type="checkbox" id="remember-me" checked/>
+            Remember me for 7 days
+          </label>
+          <a class="forgot-link" href="#" onclick="showForgot();return false;">Forgot password?</a>
+        </div>
         <button class="btn-submit" id="btn-login" onclick="handleLogin()">
           <div class="btn-spinner" id="spin-login"></div>
           <span id="login-btn-text">Sign In</span>
         </button>
-
         <div class="divider">or use demo account</div>
-
         <div class="demo-creds">
           <strong>Demo Credentials</strong>
           Email: <code>demo@kjsomaiya.edu.in</code><br/>
           Password: <code>Demo@1234</code>
-          <br/>
-          <button class="demo-fill" onclick="fillDemo()">⚡ Auto-fill credentials</button>
+          <br/><button class="demo-fill" onclick="fillDemo()">⚡ Auto-fill credentials</button>
         </div>
-
       </div>
 
-      <!-- ═══ REGISTER FORM ═══ -->
+      <!-- REGISTER FORM -->
       <div class="form-panel" id="panel-register">
-
-        <div class="alert error" id="register-error"></div>
+        <div class="alert error"  id="register-error"></div>
         <div class="alert success" id="register-success"></div>
-
         <div class="field">
           <label for="reg-name">Full Name</label>
           <div class="input-wrap">
@@ -523,7 +220,6 @@
           </div>
           <div class="field-error" id="err-reg-name">Please enter your full name.</div>
         </div>
-
         <div class="field">
           <label for="reg-email">Email Address</label>
           <div class="input-wrap">
@@ -532,13 +228,12 @@
           </div>
           <div class="field-error" id="err-reg-email">Please enter a valid email.</div>
         </div>
-
         <div class="field">
           <label for="reg-pwd">Password</label>
           <div class="input-wrap">
             <span class="input-icon">🔑</span>
             <input type="password" id="reg-pwd" placeholder="Minimum 8 characters" oninput="checkStrength(this.value)" autocomplete="new-password"/>
-            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-pwd', this)" title="Show/hide password">👁️</button>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-pwd',this)">👁️</button>
           </div>
           <div class="field-error" id="err-reg-pwd">Password must be at least 8 characters.</div>
           <div class="pwd-strength">
@@ -546,35 +241,28 @@
             <div class="strength-label" id="strength-label">Enter a password</div>
           </div>
         </div>
-
         <div class="field">
           <label for="reg-confirm">Confirm Password</label>
           <div class="input-wrap">
             <span class="input-icon">🔒</span>
             <input type="password" id="reg-confirm" placeholder="Repeat your password" autocomplete="new-password"/>
-            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-confirm', this)" title="Show/hide password">👁️</button>
+            <button class="pwd-toggle" type="button" onclick="togglePwd('reg-confirm',this)">👁️</button>
           </div>
           <div class="field-error" id="err-reg-confirm">Passwords do not match.</div>
         </div>
-
         <div class="terms-row">
           <input type="checkbox" id="terms"/>
           <label for="terms">I agree to the <a href="#">Terms of Use</a> and acknowledge this tool is for <a href="#">educational purposes only</a>.</label>
         </div>
-        <div class="field-error" id="err-terms" style="margin-top:4px;margin-bottom:0;">You must accept the terms to register.</div>
-
+        <div class="field-error" id="err-terms" style="margin-top:4px;">You must accept the terms to register.</div>
         <button class="btn-submit" id="btn-register" onclick="handleRegister()" style="margin-top:16px;">
           <div class="btn-spinner" id="spin-register"></div>
           <span id="register-btn-text">Create Account</span>
         </button>
-
       </div>
-      <!-- end register panel -->
-
-    </div><!-- /login-card -->
-  </div><!-- /right-panel -->
-
-</div><!-- /page-body -->
+    </div>
+  </div>
+</div>
 
 <footer>
   <div>Disease Prediction System — K J Somaiya School of Engineering, Somaiya Vidyavihar University, Mumbai – 400 077</div>
@@ -582,259 +270,127 @@
 </footer>
 
 <script>
-<<<<<<< HEAD
-// DEMO USER
-const DEMO_USER = { email: 'demo@kjsomaiya.edu.in', password: 'Demo@1234', name: 'Demo User' };
-
-// STORE USERS
-=======
-// ══════════════════════════════════════
-//  DEMO USERS stored in localStorage
-//  (In real app, replace with PHP/MySQL auth)
-// ══════════════════════════════════════
-const DEMO_USER = { email: 'demo@kjsomaiya.edu.in', password: 'Demo@1234', name: 'Demo User' };
-
->>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
-function getUsers() {
-  return JSON.parse(localStorage.getItem('dp_users') || '[]');
-}
-function saveUsers(users) {
-  localStorage.setItem('dp_users', JSON.stringify(users));
-}
-<<<<<<< HEAD
-
-// ADD DEMO USER
-=======
-// seed demo user on first load
->>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
-(function() {
-  const users = getUsers();
-  if (!users.find(u => u.email === DEMO_USER.email)) {
-    users.push(DEMO_USER);
-    saveUsers(users);
-  }
+// ── CHECK SESSION ON PAGE LOAD ────────────────────────────────────
+(async function checkSession() {
+  try {
+    const res  = await fetch('auth.php?action=check');
+    const data = await res.json();
+    if (data.success) {
+      // Already logged in — show banner
+      document.getElementById('logged-in-name').textContent = data.user.name;
+      document.getElementById('logged-in-banner').style.display = 'block';
+    } else {
+      // Not logged in — show cookie consent if not yet accepted
+      if (!localStorage.getItem('cookieConsent')) {
+        document.getElementById('cookie-banner').style.display = 'flex';
+      }
+    }
+  } catch (e) { /* server not running — skip */ }
 })();
 
-<<<<<<< HEAD
-// TAB SWITCH
+// ── COOKIE CONSENT ────────────────────────────────────────────────
+function acceptCookies() {
+  localStorage.setItem('cookieConsent', 'accepted');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+function declineCookies() {
+  localStorage.setItem('cookieConsent', 'declined');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+
+// ── LOGOUT ────────────────────────────────────────────────────────
+async function logout() {
+  await fetch('auth.php', { method:'POST', body: new URLSearchParams({ action:'logout' }) });
+  document.getElementById('logged-in-banner').style.display = 'none';
+  document.getElementById('cookie-banner').style.display = 'flex';
+}
+
+// ── TAB SWITCH ────────────────────────────────────────────────────
 function switchTab(tab) {
-  document.getElementById('panel-login').style.display = (tab === 'login') ? 'block' : 'none';
-  document.getElementById('panel-register').style.display = (tab === 'register') ? 'block' : 'none';
-}
-
-// PASSWORD TOGGLE
-function togglePwd(id, btn) {
-  const inp = document.getElementById(id);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
-}
-
-// DEMO FILL
-function fillDemo() {
-  document.getElementById('login-email').value = DEMO_USER.email;
-  document.getElementById('login-pwd').value = DEMO_USER.password;
-}
-
-// LOGIN
-function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pwd   = document.getElementById('login-pwd').value;
-
-  if (!email || !pwd) {
-    alert("Enter email & password");
-    return;
-  }
-
-  const users = getUsers();
-  const user = users.find(u => u.email === email && u.password === pwd);
-
-  if (!user) {
-    alert("Invalid credentials");
-    return;
-  }
-
-  sessionStorage.setItem('dp_user', JSON.stringify(user));
-  window.location.replace('index.html');
-}
-
-// REGISTER
-function handleRegister() {
-  const name = document.getElementById('reg-name').value;
-  const email = document.getElementById('reg-email').value;
-  const pwd = document.getElementById('reg-pwd').value;
-
-  if (!name || !email || !pwd) {
-    alert("Fill all fields");
-    return;
-  }
-
-  const users = getUsers();
-  users.push({ name, email, password: pwd });
-  saveUsers(users);
-
-  alert("Account created! Please login.");
-  switchTab('login');
-}
-
-// EXISTING USER BANNER
-(function () {
-  const user = sessionStorage.getItem('dp_user');
-  if (user) {
-    const u = JSON.parse(user);
-    const banner = document.createElement('div');
-
-    banner.style.cssText =
-      'background:#E6FAF0;border-bottom:1px solid #A3E6C2;color:#0D5C55;text-align:center;padding:10px;';
-
-    banner.innerHTML =
-      `👋 You're already signed in as <strong>${u.name}</strong>. 
-       <a href="index.html">Go to the app →</a>`;
-
-=======
-// ══════════════════════════════════════
-//  TAB SWITCHING
-// ══════════════════════════════════════
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='register'));
   });
-  document.getElementById('panel-login').classList.toggle('active', tab === 'login');
-  document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+  document.getElementById('panel-login').classList.toggle('active', tab==='login');
+  document.getElementById('panel-register').classList.toggle('active', tab==='register');
   clearAlerts();
 }
-
 function clearAlerts() {
-  document.querySelectorAll('.alert').forEach(a => { a.style.display = 'none'; a.textContent = ''; });
-  document.querySelectorAll('.field-error').forEach(e => e.style.display = 'none');
+  document.querySelectorAll('.alert').forEach(a => { a.style.display='none'; a.textContent=''; });
+  document.querySelectorAll('.field-error').forEach(e => e.style.display='none');
   document.querySelectorAll('input').forEach(i => i.classList.remove('error'));
 }
 
-// ══════════════════════════════════════
-//  SHOW / HIDE PASSWORD
-// ══════════════════════════════════════
-function togglePwd(inputId, btn) {
-  const inp = document.getElementById(inputId);
-  const showing = inp.type === 'text';
-  inp.type = showing ? 'password' : 'text';
-  btn.textContent = showing ? '👁️' : '🙈';
+// ── HELPERS ───────────────────────────────────────────────────────
+function togglePwd(id, btn) {
+  const inp = document.getElementById(id);
+  const show = inp.type==='text';
+  inp.type = show ? 'password' : 'text';
+  btn.textContent = show ? '👁️' : '🙈';
 }
-
-// ══════════════════════════════════════
-//  AUTO-FILL DEMO
-// ══════════════════════════════════════
 function fillDemo() {
-  document.getElementById('login-email').value = DEMO_USER.email;
-  document.getElementById('login-pwd').value = DEMO_USER.password;
-  // brief highlight
-  ['login-email','login-pwd'].forEach(id => {
-    const el = document.getElementById(id);
-    el.style.borderColor = 'var(--teal)';
-    setTimeout(() => el.style.borderColor = '', 1000);
-  });
+  document.getElementById('login-email').value = 'demo@kjsomaiya.edu.in';
+  document.getElementById('login-pwd').value   = 'Demo@1234';
 }
-
-// ══════════════════════════════════════
-//  PASSWORD STRENGTH
-// ══════════════════════════════════════
-function checkStrength(val) {
-  const bar = document.getElementById('strength-bar');
-  const label = document.getElementById('strength-label');
-  let score = 0;
-  if (val.length >= 8)                  score++;
-  if (/[A-Z]/.test(val))               score++;
-  if (/[0-9]/.test(val))               score++;
-  if (/[^A-Za-z0-9]/.test(val))        score++;
-
-  const levels = [
-    { w: '0%',   color: 'var(--border)',   text: 'Enter a password' },
-    { w: '25%',  color: 'var(--red)',      text: 'Weak' },
-    { w: '50%',  color: '#F08C00',         text: 'Fair' },
-    { w: '75%',  color: '#3BB87F',         text: 'Good' },
-    { w: '100%', color: 'var(--green)',    text: 'Strong 💪' },
-  ];
-  const lvl = val.length === 0 ? levels[0] : levels[score];
-  bar.style.width   = lvl.w;
-  bar.style.background = lvl.color;
-  label.textContent = lvl.text;
-  label.style.color = lvl.color === 'var(--border)' ? 'var(--muted)' : lvl.color;
-}
-
-// ══════════════════════════════════════
-//  FIELD VALIDATION HELPERS
-// ══════════════════════════════════════
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 function showFieldError(inputId, errId) {
   document.getElementById(inputId).classList.add('error');
   document.getElementById(errId).style.display = 'block';
 }
-function clearFieldError(inputId, errId) {
-  document.getElementById(inputId).classList.remove('error');
-  document.getElementById(errId).style.display = 'none';
-}
-function isValidEmail(v) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-}
-
-// ══════════════════════════════════════
-//  FORGOT PASSWORD (mock)
-// ══════════════════════════════════════
-function showForgot() {
-  const email = document.getElementById('login-email').value.trim();
-  if (!email || !isValidEmail(email)) {
-    showAlert('login-error', '⚠️ Enter your email address above first, then click Forgot Password.');
-    return;
-  }
-  showAlert('login-success', `✅ Password reset instructions sent to ${email}. (Demo: no actual email sent.)`);
-}
-
-// ══════════════════════════════════════
-//  ALERT HELPER
-// ══════════════════════════════════════
 function showAlert(id, msg) {
   const el = document.getElementById(id);
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  el.textContent = msg; el.style.display = 'block';
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+function setLoading(form, loading) {
+  document.getElementById(`btn-${form}`).disabled = loading;
+  document.getElementById(`spin-${form}`).style.display = loading ? 'block' : 'none';
+  document.getElementById(`${form}-btn-text`).style.opacity = loading ? '0' : '1';
+}
+function showForgot() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email || !isValidEmail(email)) { showAlert('login-error','⚠️ Enter your email above first, then click Forgot Password.'); return; }
+  showAlert('login-success', `✅ Reset instructions sent to ${email}. (Demo: no actual email sent.)`);
+}
+function checkStrength(val) {
+  let score = 0;
+  if(val.length>=8) score++; if(/[A-Z]/.test(val)) score++; if(/[0-9]/.test(val)) score++; if(/[^A-Za-z0-9]/.test(val)) score++;
+  const levels=[{w:'0%',c:'var(--border)',t:'Enter a password'},{w:'25%',c:'var(--red)',t:'Weak'},{w:'50%',c:'#F08C00',t:'Fair'},{w:'75%',c:'#3BB87F',t:'Good'},{w:'100%',c:'var(--green)',t:'Strong 💪'}];
+  const lvl = val.length===0 ? levels[0] : levels[score];
+  const bar=document.getElementById('strength-bar'); bar.style.width=lvl.w; bar.style.background=lvl.c;
+  const lbl=document.getElementById('strength-label'); lbl.textContent=lvl.t; lbl.style.color=lvl.c==='var(--border)'?'var(--muted)':lvl.c;
 }
 
-// ══════════════════════════════════════
-//  LOGIN HANDLER
-// ══════════════════════════════════════
-function handleLogin() {
+// ── LOGIN ─────────────────────────────────────────────────────────
+async function handleLogin() {
   clearAlerts();
   const email = document.getElementById('login-email').value.trim();
   const pwd   = document.getElementById('login-pwd').value;
-  let valid = true;
-
-  if (!email || !isValidEmail(email)) { showFieldError('login-email','err-login-email'); valid = false; }
-  if (!pwd)                            { showFieldError('login-pwd',  'err-login-pwd');   valid = false; }
+  let valid   = true;
+  if (!email||!isValidEmail(email)) { showFieldError('login-email','err-login-email'); valid=false; }
+  if (!pwd)                          { showFieldError('login-pwd','err-login-pwd');     valid=false; }
   if (!valid) return;
 
-  // Fake loading
   setLoading('login', true);
-  setTimeout(() => {
-    const users = getUsers();
-    const user  = users.find(u => u.email === email && u.password === pwd);
+  try {
+    const fd = new FormData();
+    fd.append('action','login'); fd.append('email',email); fd.append('password',pwd);
+    const res  = await fetch('auth.php', { method:'POST', body:fd });
+    const data = await res.json();
     setLoading('login', false);
 
-    if (!user) {
-      showAlert('login-error', '❌ Incorrect email or password. Use the demo credentials below.');
-      document.getElementById('login-pwd').value = '';
-      return;
-    }
+    if (!data.success) { showAlert('login-error', '❌ ' + data.error); return; }
 
-    showAlert('login-success', `✅ Welcome back, ${user.name}! Redirecting to the app…`);
-    setTimeout(() => {
-      // Store session
-      sessionStorage.setItem('dp_user', JSON.stringify({ name: user.name, email: user.email }));
-      window.location.href = 'disease_prediction.html';
-    }, 1200);
-  }, 900);
+    showAlert('login-success', `✅ Welcome back, ${data.user.name}! Redirecting…`);
+    setTimeout(() => window.location.href = 'index.html', 1200);
+
+  } catch(err) {
+    setLoading('login', false);
+    showAlert('login-error', '❌ Could not connect to server. Make sure XAMPP is running.');
+  }
 }
 
-// ══════════════════════════════════════
-//  REGISTER HANDLER
-// ══════════════════════════════════════
-function handleRegister() {
+// ── REGISTER ─────────────────────────────────────────────────────
+async function handleRegister() {
   clearAlerts();
   const name    = document.getElementById('reg-name').value.trim();
   const email   = document.getElementById('reg-email').value.trim();
@@ -842,75 +398,39 @@ function handleRegister() {
   const confirm = document.getElementById('reg-confirm').value;
   const terms   = document.getElementById('terms').checked;
   let valid = true;
-
-  if (!name)                       { showFieldError('reg-name',    'err-reg-name');    valid = false; }
-  if (!email || !isValidEmail(email)){ showFieldError('reg-email', 'err-reg-email');   valid = false; }
-  if (!pwd || pwd.length < 8)      { showFieldError('reg-pwd',    'err-reg-pwd');      valid = false; }
-  if (pwd !== confirm)             { showFieldError('reg-confirm', 'err-reg-confirm'); valid = false; }
-  if (!terms) {
-    document.getElementById('err-terms').style.display = 'block';
-    valid = false;
-  }
+  if (!name)                        { showFieldError('reg-name',    'err-reg-name');    valid=false; }
+  if (!email||!isValidEmail(email)) { showFieldError('reg-email',   'err-reg-email');   valid=false; }
+  if (!pwd||pwd.length<8)           { showFieldError('reg-pwd',     'err-reg-pwd');      valid=false; }
+  if (pwd!==confirm)                { showFieldError('reg-confirm', 'err-reg-confirm'); valid=false; }
+  if (!terms) { document.getElementById('err-terms').style.display='block'; valid=false; }
   if (!valid) return;
 
   setLoading('register', true);
-  setTimeout(() => {
-    const users = getUsers();
-    if (users.find(u => u.email === email)) {
-      setLoading('register', false);
-      showAlert('register-error', '❌ An account with this email already exists. Please sign in.');
-      return;
-    }
-    users.push({ name, email, password: pwd });
-    saveUsers(users);
+  try {
+    const fd = new FormData();
+    fd.append('action','register'); fd.append('name',name); fd.append('email',email); fd.append('password',pwd);
+    const res  = await fetch('auth.php', { method:'POST', body:fd });
+    const data = await res.json();
     setLoading('register', false);
-    showAlert('register-success', `✅ Account created for ${name}! Switching to Sign In…`);
-    setTimeout(() => {
-      // pre-fill login
-      document.getElementById('login-email').value = email;
-      document.getElementById('login-pwd').value   = pwd;
-      switchTab('login');
-    }, 1400);
-  }, 800);
-}
 
-// ══════════════════════════════════════
-//  LOADING STATE
-// ══════════════════════════════════════
-function setLoading(form, loading) {
-  const btn  = document.getElementById(`btn-${form}`);
-  const spin = document.getElementById(`spin-${form}`);
-  const txt  = document.getElementById(`${form}-btn-text`);
-  btn.disabled     = loading;
-  spin.style.display = loading ? 'block' : 'none';
-  txt.style.opacity  = loading ? '0' : '1';
-}
+    if (!data.success) { showAlert('register-error', '❌ ' + data.error); return; }
 
-// ══════════════════════════════════════
-//  ENTER KEY SUPPORT
-// ══════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const active = document.querySelector('.form-panel.active').id;
-  if (active === 'panel-login')    handleLogin();
-  if (active === 'panel-register') handleRegister();
-});
+    showAlert('register-success', `✅ Account created! Redirecting to the app…`);
+    setTimeout(() => window.location.href = 'index.html', 1200);
 
-// ══════════════════════════════════════
-//  CHECK IF ALREADY LOGGED IN
-// ══════════════════════════════════════
-(function() {
-  const user = sessionStorage.getItem('dp_user');
-  if (user) {
-    const u = JSON.parse(user);
-    // show a banner instead of hard redirect so user can still see login
-    const banner = document.createElement('div');
-    banner.style.cssText = 'background:#E6FAF0;border-bottom:1px solid #A3E6C2;color:#0D5C55;text-align:center;padding:10px;font-size:0.85rem;font-weight:500;';
-    banner.innerHTML = `👋 You're already signed in as <strong>${u.name}</strong>. <a href="disease_prediction.html" style="color:var(--teal);font-weight:700;">Go to the app →</a>`;
->>>>>>> ff80c564b6d8425453a6c15f997938acc94c3284
-    document.querySelector('header').after(banner);
+  } catch(err) {
+    setLoading('register', false);
+    showAlert('register-error', '❌ Could not connect to server. Make sure XAMPP is running.');
   }
-})();
+}
+
+// ── ENTER KEY ────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key!=='Enter') return;
+  const active = document.querySelector('.form-panel.active').id;
+  if (active==='panel-login')    handleLogin();
+  if (active==='panel-register') handleRegister();
+});
 </script>
 </body>
 </html>
